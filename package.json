@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "dependencies": {
+    "appwrite": "^17.0.1"
+  }
+}
