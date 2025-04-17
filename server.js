@@ -16,11 +16,11 @@ export default async({req, res}) => {
     const phone = req.query.phone;
     const imagepaths = req.files;
     
-    // Debug information without returning the entire req object
     if(!imagepaths || imagepaths.length === 0) {
         return res.json({
             status: false, 
             reason: "No files uploaded", 
+            req:req,
             phone: phone
         });
     }
