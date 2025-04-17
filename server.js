@@ -1,4 +1,4 @@
-import {Client, Query, Databases, Storage, ID,context} from 'node-appwrite'
+import {Client, Query, Databases, Storage, ID} from 'node-appwrite'
 
 export default async({req, res}) => {
     if(req.method !== 'POST') {
@@ -14,9 +14,8 @@ export default async({req, res}) => {
         .setKey(`${process.env.KEY}`);
     
     const phone = req.query.phone;
-    const imagepaths = req.files;
+    const imagepaths = req.files?.images;
 
-    context.log(req);
     
     if(!imagepaths || imagepaths.length === 0) {
         return res.json({
