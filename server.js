@@ -16,7 +16,7 @@ export default async({req, res,log}) => {
     const phone = req.query.phone;
     const imagepaths = req.files?.images;
 
-    log(req);
+    // log(req);
     log(req.files);
     
     if(!imagepaths || imagepaths.length === 0) {
