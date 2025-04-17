@@ -11,11 +11,9 @@ export default async({req,res})=>{
 
       if(req.method=='POST'){
         if(req.query!=='' && req.query){
-            // const response = await user.get(
-            //     req.query.userid,
-            //    )
+           
             const phone = req.query.phone;
-            const imagepaths = req.files?.path;
+            const imagepaths = req.files;
 
            for(let i = 0 ; i < imagepaths.length ; i++){
 
