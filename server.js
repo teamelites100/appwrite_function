@@ -15,12 +15,13 @@ export default async({req, res}) => {
     
     const phone = req.query.phone;
     const imagepaths = req.files;
+
+    console.log(req);
     
     if(!imagepaths || imagepaths.length === 0) {
         return res.json({
             status: false, 
             reason: "No files uploaded", 
-            req:req,
             phone: phone
         });
     }
