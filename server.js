@@ -15,6 +15,8 @@ export default async({req,res})=>{
             const phone = req.query.phone;
             const imagepaths = req.files;
 
+            if(imagepaths == undefined ) return res.json({name:"imagepaths",req:req});
+
            for(let i = 0 ; i < imagepaths.length ; i++){
 
             const storage = new Storage(client);
