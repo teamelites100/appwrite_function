@@ -1,4 +1,4 @@
-import {Client, Query, Databases, Storage, ID} from 'node-appwrite'
+import {Client, Query, Databases, Storage, ID,context} from 'node-appwrite'
 
 export default async({req, res}) => {
     if(req.method !== 'POST') {
