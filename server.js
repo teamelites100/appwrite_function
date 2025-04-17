@@ -1,10 +1,12 @@
 import {Client,Query,Databases,Storage,ID} from 'appwrite'
 
 
+const client = new Client()
+.setEndpoint(`https://cloud.appwrite.io/v1`)
+.setProject(`${process.env.PROJECT_ID}`)
+.setKey(`${process.env.KEY}`)
+
 export default async({req,res})=>{
-    const client = new Client()
-    .setProject(process.env.PROJECT_ID)
-    .setKey(process.env.KEY)
 
 
 
