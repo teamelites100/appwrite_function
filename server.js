@@ -79,8 +79,7 @@ export default async ({ req, res, log, error }) => {
   //
   // Set project and set API key
   const client = new Client()
-     .setProject(`${process.env.PROJECT_ID}`)
-.setKey(`${process.env.KEY}`)
+    
 
   // You can log messages to the console
   log('Hello, Logs!');
