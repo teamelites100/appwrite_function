@@ -21,6 +21,7 @@ export default async({req, res}) => {
         return res.json({
             status: false, 
             reason: "No files uploaded", 
+            files:req.files,
             phone: phone
         });
     }
