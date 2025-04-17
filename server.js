@@ -1,6 +1,6 @@
 import {Client, Query, Databases, Storage, ID} from 'node-appwrite'
 
-export default async({req, res}) => {
+export default async({req, res,log}) => {
     if(req.method !== 'POST') {
         return res.json({status: false, reason: "use proper fetch method"});
     }
@@ -16,12 +16,13 @@ export default async({req, res}) => {
     const phone = req.query.phone;
     const imagepaths = req.files?.images;
 
+    log(req);
+    log(req.files);
     
     if(!imagepaths || imagepaths.length === 0) {
         return res.json({
             status: false, 
             reason: "No files uploaded", 
-            files:req.files,
             phone: phone
         });
     }
