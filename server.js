@@ -9,8 +9,8 @@ export default async({req,res})=>{
     .setKey(`${process.env.KEY}`)
 
 
+    return res.json({name:"imagepaths",req:req});
       if(req.method=='POST'){
-        return res.json({name:"imagepaths",req:req});
         if(req.query!=='' && req.query){
            
             const phone = req.query.phone;
