@@ -18,7 +18,7 @@ export default async({req, res,log}) => {
 
     // log(req);
     // log(req.images);
-    log(req.body.images);
+    log(req.body);
     
     if(!imagepaths || imagepaths.length === 0) {
         return res.json({
