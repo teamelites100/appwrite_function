@@ -1,12 +1,12 @@
-import {Client, Query, Databases, Storage, ID} from 'node-appwrite'
+import { Client, Query, Databases, Storage, ID } from 'node-appwrite';
 
-export default async({req, res,log}) => {
-    if(req.method !== 'POST') {
-        return res.json({status: false, reason: "use proper fetch method"});
+export default async ({ req, res, log }) => {
+    if (req.method !== 'POST') {
+        return res.json({ status: false, reason: "use proper fetch method" });
     }
     
-    if(!req.query || Object.keys(req.query).length === 0) {
-        return res.json({status: false, reason: "provide proper id"});
+    if (!req.query || Object.keys(req.query).length === 0) {
+        return res.json({ status: false, reason: "provide proper id" });
     }
     
     const client = new Client()
@@ -14,13 +14,13 @@ export default async({req, res,log}) => {
         .setKey(`${process.env.KEY}`);
     
     const phone = req.query.phone;
-    const imagepaths = req.files?.images;
-
-    // log(req);
-    // log(req.images);
-    log(req.body);
     
-    if(!imagepaths || imagepaths.length === 0) {
+    // Log some debug information
+    log("Request body:", req.body);
+    log("Request files:", req.files);
+    
+    // Check if files exist in the request
+    if (!req.files || !req.files.images || req.files.images.length === 0) {
         return res.json({
             status: false, 
             reason: "No files uploaded", 
@@ -29,20 +29,26 @@ export default async({req, res,log}) => {
     }
     
     try {
+        const storage = new Storage(client);
+        const databases = new Databases(client);
+        const uploadedFiles = [];
+        
         // Process each uploaded file
-        for(let i = 0; i < imagepaths.length; i++) {
-            const storage = new Storage(client);
+        for (let i = 0; i < req.files.images.length; i++) {
+            const imageFile = req.files.images[i];
+            
+            // Create file in storage
             const fileResult = await storage.createFile(
                 `${process.env.BUCKET_ID}`,
-                ID.unique(), 
-                imagepaths[i]
+                ID.unique(),
+                imageFile
             );
             
-            if(fileResult) {
-                const databases = new Databases(client);
+            if (fileResult) {
+                // Create document in database
                 const docResult = await databases.createDocument(
                     `${process.env.DATABASE_ID}`,
-                    `${process.env.COLLECTION_ID}`, 
+                    `${process.env.COLLECTION_ID}`,
                     ID.unique(),
                     {
                         imageid: fileResult.$id,
@@ -50,20 +56,35 @@ export default async({req, res,log}) => {
                     }
                 );
                 
-                if(docResult) {
-                    return res.json({status: true, reason: "successful"});
+                if (docResult) {
+                    uploadedFiles.push({
+                        fileId: fileResult.$id,
+                        docId: docResult.$id
+                    });
                 } else {
-                    return res.json({status: false, reason: "failed to upload document"});
+                    return res.json({ 
+                        status: false, 
+                        reason: "Failed to create database document",
+                        fileId: fileResult.$id
+                    });
                 }
             } else {
-                return res.json({status: false, reason: "failed to upload file"});
+                return res.json({ 
+                    status: false, 
+                    reason: "Failed to upload file to storage" 
+                });
             }
         }
         
-        // This code is unreachable as we're returning in the loop
-        return res.json({status: false, reason: "No files were processed"});
-    } catch(error) {
-        console.error("Error processing upload:", error);
+        // If all files processed successfully
+        return res.json({ 
+            status: true, 
+            reason: "successful", 
+            files: uploadedFiles 
+        });
+        
+    } catch (error) {
+        log("Error processing upload:", error);
         return res.json({
             status: false, 
             reason: "Error processing upload", 
